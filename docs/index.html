@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>POC</title>
+  <style>
+    html, body {
+      width:100%;
+      height:100%;
+      padding:0;
+      margin:0
+    }
+
+    body {
+      margin: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    }
+
+    ul {
+      list-style-type: none;
+      padding-inline-start: 0;
+      margin-block-start: 0;
+      margin-block-end: 0;
+    }
+
+    .line > * {
+      margin: 0 0 0 8px;
+    }
+
+    img.emoticon {
+      margin: -.5rem 0;
+    }
+  </style>
+</head>
+<body>
+  <span id="logon">
+    <input type="text" id="ChanList" value="bobross, lirik, gronkh, gronkhtv, xpandorya, montanablack88, therealknossi, rocketleague">
+    <button onclick="JoinChannels()">Join Channels</button>
+  </span>
+  <ul id="list">
+  </ul>
+</body>
+<script src='wasm_exec.js'></script>
+<script>
+    const list = document.getElementById('list')
+    let autoScroll = false
+
+    window.OnNoticeMessage = data => {
+      div = document.createElement('li')
+      div.innerHTML = `<span id="${data.channel} NoticeMessage" class="line"><span class="channel">${data.channel}:</span><span class="${data.msgid}">${data.message}</span></span>`
+      list.appendChild(div)
+    }
+
+    window.OnPrivateMessage = data => {
+      div = document.createElement('li')
+      div.innerHTML = data.htmlDom
+      list.appendChild(div)
+
+      if (autoScroll) {
+        window.scrollTo(0, list.scrollHeight)
+      }
+    }
+
+    document.addEventListener('scroll', () => {
+        if ((window.innerHeight + window.pageYOffset+99) >= list.scrollHeight) {
+          autoScroll = true
+        } else if (autoScroll) {
+          autoScroll = false
+        }
+    })
+
+    const go = new Go()
+    WebAssembly.instantiateStreaming(fetch('./main.wasm'), go.importObject).then(mod => go.run(mod.instance))
+
+    function JoinChannels() {
+      StartTwitchChat({ channels: document.getElementById('ChanList').value.split(',').map(chan => chan.trim()) })
+      document.getElementById('logon').remove()
+    }
+</script>
+</html>
