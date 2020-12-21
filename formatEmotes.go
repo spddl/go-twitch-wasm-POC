@@ -48,7 +48,7 @@ func parseEmoticons(emotes string) []emoticons {
 			result = append(result, emoticons{
 				von:      von,
 				bis:      bis + 1,
-				template: strings.Split("<img class='emoticon' src='http://static-cdn.jtvnw.net/emoticons/v1/"+EID+"/1.0' srcset='https://static-cdn.jtvnw.net/emoticons/v1/"+EID+"/1.0 1x,http://static-cdn.jtvnw.net/emoticons/v1/"+EID+"/2.0 2x,http://static-cdn.jtvnw.net/emoticons/v1/"+EID+"/3.0 4x'>", ""),
+				template: strings.Split("<img class='emoticon' src='//static-cdn.jtvnw.net/emoticons/v1/"+EID+"/1.0' srcset='//static-cdn.jtvnw.net/emoticons/v1/"+EID+"/1.0 1x,//static-cdn.jtvnw.net/emoticons/v1/"+EID+"/2.0 2x,//static-cdn.jtvnw.net/emoticons/v1/"+EID+"/3.0 4x'>", ""),
 			})
 		}
 	}
